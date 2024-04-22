@@ -1,14 +1,9 @@
 # trigger:
 # - master
 
-# pool:
-#   vmImage: 'ubuntu-latest'
-
-# pool:
-#   name: self-hosted-agent
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: self-hosted-agent
 
 steps:
 - task: UsePythonVersion@0

@@ -1,37 +1,3 @@
-# # trigger:
-# # - master
-
-# variables:
-#   subscription: IoT UAE(19dba8f7-7dcd-4a79-8aea-7594b47f7b8b)
-#   resourceGroup: resourcegroup-tfstate
-#   storageAccount: saterraformtfstateskip
-#   container: tfstate
-#   tfstateFile: terraform.tfstate
-#   anyTfChanges: false
-
-# pool:
-#   name: self-hosted
-
-# steps:
-# - task: TerraformInstaller@1
-#   inputs:
-#     terraformVersion: 'latest'
-    
-
-# - task: TerraformTaskV4@4
-#   inputs:
-#     provider: 'azurerm'
-#     command: 'init'
-#     backendServiceArm: 'IoT UAE (19dba8f7-7dcd-4a79-8aea-7594b47f7b8b)'
-#     backendAzureRmResourceGroupName: 'resourcegroup-tfstate'
-#     backendAzureRmStorageAccountName: 'saterraformtfstateskip'
-#     backendAzureRmContainerName: 'tfstate'
-#     backendAzureRmKey: 'terraform.tfstate'
-  
-
-
-  #####
-
 # trigger:
 # - master
 
@@ -64,15 +30,15 @@ steps:
     backendAzureRmContainerName: '$(container)'
     backendAzureRmKey: '$(tfstateFile)'
 
-# - task: TerraformTaskV1@0
-#   displayName: terraform plan -out=tfplan
-#   inputs:
-#     provider: 'azurerm'
-#     command: 'plan'
-#     workingDirectory: '$(System.DefaultWorkingDirectory)/skip-step'
-#     commandOptions: '-out=tfplan'
-#     # commandOptions: '-detailed-exitcode -out=tfplan'
-#     environmentServiceNameAzureRM: '$(subscription)'
+- task: TerraformTaskV1@0
+  displayName: terraform plan -out=tfplan
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/skip-step'
+    commandOptions: '-out=tfplan'
+    # commandOptions: '-detailed-exitcode -out=tfplan'
+    environmentServiceNameAzureRM: '$(subscription)'
 
 # - task: PowerShell@2
 #   displayName: detect any terraform change
@@ -94,12 +60,12 @@ steps:
 #         Write-Host "There is no change detected in Terraform tfplan file"
 #       }
 
-# - task: TerraformTaskV1@0
-#   displayName: terraform apply tfplan
-#   condition: eq(variables.anyTfChanges, true)
-#   inputs:
-#     provider: 'azurerm'
-#     command: 'apply'
-#     workingDirectory: '$(System.DefaultWorkingDirectory)/skip-step'
-#     commandOptions: 'tfplan'
-#     environmentServiceNameAzureRM: '$(subscription)'
+- task: TerraformTaskV1@0
+  displayName: terraform apply tfplan
+  condition: eq(variables.anyTfChanges, true)
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/skip-step'
+    commandOptions: 'tfplan'
+    environmentServiceNameAzureRM: '$(subscription)'

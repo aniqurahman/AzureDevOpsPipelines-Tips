@@ -14,12 +14,12 @@ variables:
 
 steps:
 - task: TerraformInstaller@1
-  displayName: Install Latest Terraform
+  displayName: Install latest Terraform
   inputs:
     terraformVersion: 'latest'
 
 - task: TerraformTaskV4@4
-  displayName: terraform init
+  displayName: Terraform init
   inputs:
     provider: 'azurerm'
     command: 'init'
@@ -30,8 +30,8 @@ steps:
     backendAzureRmContainerName: '$(container)'
     backendAzureRmKey: '$(tfstateFile)'
 
-- task: TerraformTaskV1@0
-  displayName: terraform plan -out=tfplan
+- task: TerraformTaskV4@4
+  displayName: Terraform plan -out=tfplan
   inputs:
     provider: 'azurerm'
     command: 'plan'
@@ -40,28 +40,28 @@ steps:
     # commandOptions: '-detailed-exitcode -out=tfplan'
     environmentServiceNameAzureRM: '$(subscription)'
 
-# - task: PowerShell@2
-#   displayName: detect any terraform change
-#   inputs:
-#     workingDirectory: '$(System.DefaultWorkingDirectory)/skip-step'
-#     targetType: 'inline'
-#     script: |
-#       # Write-Host "LASTEXITCODE : $LASTEXITCODE"
-#       $plan = $(terraform show -json tfplan | ConvertFrom-Json)
-#       $actions = $plan.resource_changes.change.actions
-#       Write-Host "Terraform actions : $actions"
-#       if (($actions -contains 'create') -or ($actions -contains 'delete') -or ($actions -contains 'update'))
-#       {
-#         Write-Host "Terraform will perform the following actions : $actions"
-#         Write-Host "##vso[task.setvariable variable=anyTfChanges;]true"
-#       }
-#       else
-#       {
-#         Write-Host "There is no change detected in Terraform tfplan file"
-#       }
+- task: PowerShell@2
+  displayName: Detect any terraform change
+  inputs:
+    workingDirectory: '$(System.DefaultWorkingDirectory)/skip-step'
+    targetType: 'inline'
+    script: |
+      # Write-Host "LASTEXITCODE : $LASTEXITCODE"
+      $plan = $(terraform show -json tfplan | ConvertFrom-Json)
+      $actions = $plan.resource_changes.change.actions
+      Write-Host "Terraform actions : $actions"
+      if (($actions -contains 'create') -or ($actions -contains 'delete') -or ($actions -contains 'update'))
+      {
+        Write-Host "Terraform will perform the following actions : $actions"
+        Write-Host "##vso[task.setvariable variable=anyTfChanges;]true"
+      }
+      else
+      {
+        Write-Host "There is no change detected in Terraform tfplan file"
+      }
 
-- task: TerraformTaskV1@0
-  displayName: terraform apply tfplan
+- task: TerraformTaskV4@4
+  displayName: Terraform apply tfplan
   condition: eq(variables.anyTfChanges, true)
   inputs:
     provider: 'azurerm'

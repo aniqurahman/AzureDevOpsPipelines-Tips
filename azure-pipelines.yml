@@ -5,9 +5,9 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  subscription: Visual Studio Enterprise(17b12858-3960-4e6f-a663-a06fdae23428)
+  subscription: IoT UAE(19dba8f7-7dcd-4a79-8aea-7594b47f7b8b)
   resourceGroup: resourcegroup-tfstate
-  storageAccount: terraformtfstateskip
+  storageAccount: saterraformtfstateskip
   container: tfstate
   tfstateFile: terraform.tfstate
   anyTfChanges: false

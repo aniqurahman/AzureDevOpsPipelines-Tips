@@ -62,7 +62,7 @@ steps:
 
 - task: TerraformTaskV4@4
   displayName: Terraform apply tfplan
-  # condition: eq(variables.anyTfChanges, true)
+  condition: eq(variables.anyTfChanges, true)
   inputs:
     provider: 'azurerm'
     command: 'apply'

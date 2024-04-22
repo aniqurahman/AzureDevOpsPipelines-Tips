@@ -39,7 +39,7 @@ pool:
   name: self-hosted
 
 variables:
-  subscription: IoT UAE(19dba8f7-7dcd-4a79-8aea-7594b47f7b8b)
+  subscription: 'IoT UAE (19dba8f7-7dcd-4a79-8aea-7594b47f7b8b)'
   resourceGroup: resourcegroup-tfstate
   storageAccount: saterraformtfstateskip
   container: tfstate
